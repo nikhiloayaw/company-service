@@ -1,0 +1,180 @@
+basePath: /api/v1
+definitions:
+  request.Employee:
+    properties:
+      count:
+        minimum: 1
+        type: integer
+    type: object
+  request.SignIn:
+    properties:
+      email:
+        type: string
+      password:
+        maxLength: 25
+        minLength: 6
+        type: string
+    required:
+    - email
+    type: object
+  request.SignUp:
+    properties:
+      email:
+        type: string
+      password:
+        maxLength: 25
+        minLength: 6
+        type: string
+    required:
+    - email
+    type: object
+  response.Employee:
+    properties:
+      age:
+        type: integer
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      role:
+        type: string
+    type: object
+  response.Response:
+    properties:
+      data: {}
+      error: {}
+      message:
+        type: string
+      status_code:
+        type: integer
+      success:
+        type: boolean
+    type: object
+  response.SignIn:
+    properties:
+      access_token:
+        type: string
+    type: object
+  response.SignUp:
+    properties:
+      user_id:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: BoilerPlate for micro services with GRPC
+  title: Go Microservices BoilerPlate
+paths:
+  /auth/sign-in:
+    post:
+      description: API For User To Sign In
+      operationId: User SignIn
+      parameters:
+      - description: Sign In Details
+        in: body
+        name: inputs
+        required: true
+        schema:
+          $ref: '#/definitions/request.SignIn'
+      responses:
+        "200":
+          description: Successfully Sign In Completed
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.SignIn'
+              type: object
+        "400":
+          description: Invalid Inputs
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: User Not Exist With This Details
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: User Sign In
+      tags:
+      - Authentication
+  /auth/sign-up:
+    post:
+      description: API For User To Sign Up
+      operationId: User SignUp
+      parameters:
+      - description: Sign Up Details
+        in: body
+        name: inputs
+        required: true
+        schema:
+          $ref: '#/definitions/request.SignUp'
+      responses:
+        "200":
+          description: Successfully Sign Up Completed
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.SignUp'
+              type: object
+        "400":
+          description: Invalid Inputs
+          schema:
+            $ref: '#/definitions/response.Response'
+        "409":
+          description: User Already Exist
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: User Sign Up
+      tags:
+      - Authentication
+  /employees:
+    post:
+      description: API for User To Create Random Employees Details
+      operationId: Create Employees
+      parameters:
+      - description: Create Employees Details
+        in: body
+        name: inputs
+        required: true
+        schema:
+          $ref: '#/definitions/request.Employee'
+      responses:
+        "200":
+          description: Successfully Employees Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/response.Employee'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Create Employees
+      tags:
+      - Employees
+securityDefinitions:
+  BearerAuth:
+    description: 'Add prefix of Bearer before  token Ex: "Bearer token"'
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
