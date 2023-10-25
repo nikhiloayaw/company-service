@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package company;
+
+option go_package="./pkg/pb";
+
+service CompanyService {
+    rpc Create(CompanyCreateRequest)returns (stream CompanyCreateResponse){};
+}
+
+message CompanyCreateRequest{
+    string name = 1;
+    string ceo = 2;
+    int32 total_employees = 3;
+}
+
+message CompanyCreateResponse{
+    bytes data = 1;
+}
+
+// company details will consider
+
+message Employee {
+    string id = 1;
+    string name = 2;
+    int32 age = 3;
+    string email = 4;
+    float salary = 5;
+    string role = 7;
+}
+
+message Team {
+    string name = 1;
+    Employee manager = 2;
+    repeated Employee members = 3;
+    int32 total_employees = 4;
+}
+
+message Department {
+    string name = 1;
+    Employee leader = 2;
+    repeated Team teams = 3;
+    int32 total_employees = 4;
+}
+
+message Company {
+    string name = 1;
+    string industry = 2;
+    string ceo = 3;
+    repeated Department departments = 4;
+    int32 total_employees = 5;
+}
